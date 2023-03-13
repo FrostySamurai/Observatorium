@@ -19,7 +19,7 @@ namespace Samurai.Observatorium.Runtime
         public override Type DataType => typeof(TData);
     }
     
-    public abstract class ScriptableEventChannel<TKey, TData> : ScriptableEventChannel where TData : IEventKeyProvider<TKey>
+    public abstract class ScriptableEventChannel<TKey, TData> : ScriptableEventChannel where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
     {
         private class EventChannelWrapper : EventChannel<TKey, TData> {}
 

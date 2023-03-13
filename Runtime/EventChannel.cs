@@ -37,8 +37,12 @@ namespace Samurai.Observatorium.Runtime
 
         public IDisposable Register(Action<TData> callback)
         {
-            _callbacks.Add(callback);
+            if (_callbacks.Contains(callback))
+            {
+                return new CallbackDisposer(null);
+            }
             
+            _callbacks.Add(callback);
             return new CallbackDisposer(() => Unregister(callback));
         }
 
@@ -53,14 +57,19 @@ namespace Samurai.Observatorium.Runtime
         }
     }
 
-    public abstract class EventChannel<TKey, TData> : EventChannel<TData> where TData : IEventKeyProvider<TKey>
+    public abstract class EventChannel<TKey, TData> : EventChannel<TData> where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
     {
         private Dictionary<TKey, List<Action<TData>>> _mappedCallbacks = new();
 
         public IDisposable Register(Action<TData> callback, TKey key)
         {
-            GetCallbacks(key).Add(callback);
+            var callbacks = GetCallbacks(key);
+            if (callbacks.Contains(callback))
+            {
+                return new CallbackDisposer(null);
+            }
 
+            callbacks.Add(callback);
             return new CallbackDisposer(() => Unregister(callback, key));
         }
 
@@ -109,7 +118,7 @@ namespace Samurai.Observatorium.Runtime
                 return callbacks;
             }
 
-            callbacks = ListPool<Action<TData>>.Get();
+            callbacks = new List<Action<TData>>();
             _mappedCallbacks[key] = callbacks;
             return callbacks;
         }

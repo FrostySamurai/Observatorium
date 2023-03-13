@@ -8,17 +8,6 @@ namespace Samurai.Observatorium.Runtime
 {
     public class EventSystem
     {
-        #region Inner Types
-
-        private class NoChannelFoundException : Exception
-        {
-            public NoChannelFoundException(Type type) : base($"No valid channel found for data type '{type.FullName}'.")
-            {
-            }
-        }
-
-        #endregion Inner Types
-        
         private Dictionary<Type, EventChannel> _channels = new();
 
         #region Lifecycle
@@ -73,31 +62,31 @@ namespace Samurai.Observatorium.Runtime
 
         public IDisposable Register<TData>(Action<TData> callback)
         {
-            return GetChannel<TData>().Register(callback);
+            return GetChannel<TData>()?.Register(callback);
         }
 
         public void Unregister<TData>(Action<TData> callback)
         {
-            GetChannel<TData>().Unregister(callback);
+            GetChannel<TData>()?.Unregister(callback);
         }
 
         public void Raise<TData>(TData data)
         {
-            GetChannel<TData>().Raise(data);
+            GetChannel<TData>()?.Raise(data);
         }
 
         #endregion General Events
 
         #region Keyed Events
 
-        public IDisposable Register<TKey, TData>(Action<TData> callback, TKey key) where TData : IEventKeyProvider<TKey>
+        public IDisposable Register<TKey, TData>(Action<TData> callback, TKey key) where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
         {
-            return GetChannel<TKey, TData>().Register(callback, key);
+            return GetChannel<TKey, TData>()?.Register(callback, key);
         }
 
-        public void Unregister<TKey, TData>(Action<TData> callback, TKey key) where TData : IEventKeyProvider<TKey>
+        public void Unregister<TKey, TData>(Action<TData> callback, TKey key) where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
         {
-            GetChannel<TKey, TData>().Unregister(callback, key);
+            GetChannel<TKey, TData>()?.Unregister(callback, key);
         }
 
         #endregion Keyed Events
@@ -106,35 +95,52 @@ namespace Samurai.Observatorium.Runtime
 
         private EventChannel<TData> GetChannel<TData>()
         {
-            var channel = GetBaseChannel<TData>();
+            if (!TryGetBaseChannel<TData>(out var channel))
+            {
+                return null;
+            }
+            
             if (channel is not EventChannel<TData> dataChannel)
             {
-                throw new NoChannelFoundException(typeof(TData));
+                LogChannelNotFound(typeof(TData));
+                return null;
             }
 
             return dataChannel;
         }
 
-        private EventChannel<TKey, TData> GetChannel<TKey, TData>() where TData : IEventKeyProvider<TKey>
+        private EventChannel<TKey, TData> GetChannel<TKey, TData>() where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
         {
-            var channel = GetBaseChannel<TData>();
+            if (!TryGetBaseChannel<TData>(out var channel))
+            {
+                return null;
+            }
+            
             if (channel is not EventChannel<TKey, TData> dataChannel)
             {
-                throw new NoChannelFoundException(typeof(TData));
+                LogChannelNotFound(typeof(TData));
+                return null;
             }
 
             return dataChannel;
         }
 
-        private EventChannel GetBaseChannel<TData>()
+        private bool TryGetBaseChannel<TData>(out EventChannel channel)
         {
             var dataType = typeof(TData);
-            if (!_channels.TryGetValue(dataType, out var channel))
+            if (!_channels.TryGetValue(dataType, out channel))
             {
-                throw new NoChannelFoundException(dataType);
+                LogChannelNotFound(dataType);
+                return false;
             }
 
-            return channel;
+            return true;
+        }
+
+        private void LogChannelNotFound(Type dataType)
+        {
+            Debug.LogError($"[EventSystem] There was no event channel found for data type '{dataType.FullName}'. " +
+                           $"Make sure there is a class inheriting from EventChannel<> or ScriptableEventChannel<>.");
         }
 
         #endregion Private
