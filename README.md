@@ -1,3 +1,5 @@
+![GitHub](https://img.shields.io/github/license/FrostySamurai/Observatorium)
+
 # Observatorium
 
 A simple event system for Unity.
