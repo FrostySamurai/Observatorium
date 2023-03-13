@@ -117,7 +117,10 @@ public class Observer : MonoBehaviour
 
     private void Awake()
     {
+        // This will be called always
         _eventHandles.Add(App.EventSystem.Register<OnHealthChanged>(LogHeatlhChanged));
+        
+        // This will only be called if data.Id == 1
         _eventHandles.Add(App.EventSystem.Register<int, OnHealthChanged>(1, LogHeatlhChangedKeyed));
     }
 
@@ -133,7 +136,6 @@ public class Observer : MonoBehaviour
 
     private void LogHeatlhChangedKeyed(OnHealthChanged data)
     {
-    	// This will only be called if data.Id == 1
         Debug.Log($"Health for entity with id {data.Id} changed by {data.ChangeAmount} to {data.Health}.");
     }
 }
