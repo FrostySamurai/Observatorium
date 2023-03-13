@@ -1,0 +1,17 @@
+{
+  "name": "net.samurai.observatorium",
+  "displayName": "Samurai Observatorium",
+  "version": "0.0.1",
+  "unity": "2021.3",
+  "description": "A simple event system for Unity.",
+  "author": {
+    "name": "Samurai",
+  },
+ "keywords": [
+    "package",
+    "samurai",
+    "utils",
+    "event system",
+    "events"
+  ]
+}
