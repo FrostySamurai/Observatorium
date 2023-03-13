@@ -74,6 +74,11 @@ namespace Samurai.Observatorium.Runtime
                 Debug.LogError($"Raising an event failed! Data: {data} | Callback: {callback?.Target} - {callback?.Method}{Environment.NewLine}{e.Message}{Environment.NewLine}{e.StackTrace}");
             }
         }
+
+        protected bool Has(Action<TData> callback)
+        {
+            return _callbacks.Contains(callback);
+        }
     }
 
     public abstract class EventChannel<TKey, TData> : EventChannel<TData> where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
@@ -83,7 +88,7 @@ namespace Samurai.Observatorium.Runtime
         public IDisposable Register(TKey key, Action<TData> callback)
         {
             var callbacks = GetCallbacks(key);
-            if (callbacks.Contains(callback))
+            if (callbacks.Contains(callback) || base.Has(callback))
             {
                 return new CallbackDisposer(null);
             }
@@ -130,7 +135,7 @@ namespace Samurai.Observatorium.Runtime
             
             base.Raise(data);
         }
-
+        
         private List<Action<TData>> GetCallbacks(TKey key)
         {
             if (_mappedCallbacks.TryGetValue(key, out var callbacks))

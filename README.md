@@ -117,11 +117,17 @@ public class Observer : MonoBehaviour
 
     private void Awake()
     {
-        // This will be called always
+        // this will be called always when OnHealthChanged event is raised
         _eventHandles.Add(App.EventSystem.Register<OnHealthChanged>(LogHeatlhChanged));
-        
-        // This will only be called if data.Id == 1
+
+        // invalid, given function is already registered so the registration will be ignored and only above callback is used.. returns Empty IDisposable that does nothing
+        _eventHandles.Add(App.EventSystem.Register<int, OnHealthChanged>(1, LogHealthChanged));
+
+        // this will only be called if data.Id == 1, only works with keyed event channels
         _eventHandles.Add(App.EventSystem.Register<int, OnHealthChanged>(1, LogHeatlhChangedKeyed));
+
+        // lambdas can be used as well, but need to be unregistered through IDisposable (Unregister function won't work)
+        _eventHandles.Add(App.EventSystem.Register<OnHealthChanged>(x => Debug.Log($"Lambda callback for entity with id {x.Id}.")));
     }
 
     private void OnDestroy()
@@ -139,6 +145,17 @@ public class Observer : MonoBehaviour
         Debug.Log($"Health for entity with id {data.Id} changed by {data.ChangeAmount} to {data.Health}.");
     }
 }
+```
+
+```csharp
+// valid, this would also unregister keyed callback, but has more overhead
+App.EventSystem.Unregister<OnHealthChanged>(LogHeatlhChanged);
+
+// valid, preferred for keyed callbacks
+App.EventSystem.Unregister<int, OnHealthChanged>(LogHealthChanged)
+
+// invalid, lambda functions need to be unregistered through IDisposable returned from Register function
+App.EventSystem.Unregister<OnHealthChanged>(x => Debug.Log($"Lambda callback for entity with id {x.Id}."));
 ```
 
 ## Debugging
