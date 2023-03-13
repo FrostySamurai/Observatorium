@@ -28,14 +28,14 @@ Event channels that are pure C# classes. Event System creates them if you pass a
 ```csharp
 public struct OnHealthChanged
 {
-	public int Health;
-	public int ChangeAmount;
+    public int Health;
+    public int ChangeAmount;
 
-	public int OnHealthChanged(int health, int changeAmount)
-	{
-		Health = health;
-		ChangeAmount = changeAmount;
-	}
+    public int OnHealthChanged(int health, int changeAmount)
+    {
+        Health = health;
+        ChangeAmount = changeAmount;
+    }
 }
 
 public class OnHealthChangedChannel : EventChannel<OnHealthChanged> {}
@@ -45,18 +45,18 @@ public class OnHealthChangedChannel : EventChannel<OnHealthChanged> {}
 ```csharp
 public struct OnHealthChanged : IEventKeyProvider<int>
 {
-	public int Id;
-	public int Health;
-	public int ChangeAmount;
+    public int Id;
+    public int Health;
+    public int ChangeAmount;
 
-	public int EventKey => Id;
+    public int EventKey => Id;
 
-	public int OnHealthChanged(int id, int health, int changeAmount)
-	{
-		Id = id;
-		Health = health;
-		ChangeAmount = changeAmount;
-	}
+    public int OnHealthChanged(int id, int health, int changeAmount)
+    {
+        Id = id;
+        Health = health;
+        ChangeAmount = changeAmount;
+    }
 }
 
 public class OnHealthChangedChannel : EventChannel<int, OnHealthChanged> {}
@@ -72,18 +72,18 @@ For simplicity only keyed example is provided as these are implemented similaril
 ```csharp
 public struct OnHealthChanged : IEventKeyProvider<int>
 {
-	public int Id;
-	public int Health;
-	public int ChangeAmount;
+    public int Id;
+    public int Health;
+    public int ChangeAmount;
 
-	public int EventKey => Id;
+    public int EventKey => Id;
 
-	public int OnHealthChanged(int id, int health, int changeAmount)
-	{
-		Id = id;
-		Health = health;
-		ChangeAmount = changeAmount;
-	}
+    public int OnHealthChanged(int id, int health, int changeAmount)
+    {
+        Id = id;
+        Health = health;
+        ChangeAmount = changeAmount;
+    }
 }
 
 [CreateAssetMenu(fileName = "OnHealthChangedChannel", menuName = "Events/OnHealthChanged")]
@@ -100,10 +100,10 @@ Once you have the Event System instance created and some event channel specified
 public class Provider : MonoBehaviour
 {
 	private void Start()
-	{
-		var eventData = new OnHealthChanged(1, 10, -5);
-		App.EventSystem.Raise(eventData);
-	}
+    {
+        var eventData = new OnHealthChanged(1, 10, -5);
+        App.EventSystem.Raise(eventData);
+    }
 }
 ```
 
@@ -111,28 +111,28 @@ public class Provider : MonoBehaviour
 ```csharp
 public class Observer : MonoBehaviour
 {
-	private List<IDisposable> _eventHandles = new();
+    private List<IDisposable> _eventHandles = new();
 
-	private void Awake()
-	{
-		_eventHandles.Add(App.EventSystem.Register<OnHealthChanged>(LogHeatlhChanged));
-		_eventHandles.Add(App.EventSystem.Register<int, OnHealthChanged>(LogHeatlhChangedKeyed, 1));
-	}
+    private void Awake()
+    {
+        _eventHandles.Add(App.EventSystem.Register<OnHealthChanged>(LogHeatlhChanged));
+        _eventHandles.Add(App.EventSystem.Register<int, OnHealthChanged>(LogHeatlhChangedKeyed, 1));
+    }
 
-	private void OnDestroy()
-	{
-		_eventHandles.ForEach(x => x.Dispose());
-	}
+    private void OnDestroy()
+    {
+        _eventHandles.ForEach(x => x.Dispose());
+    }
 
-	private void LogHeatlhChanged(OnHealthChanged data)
-	{
-		Debug.Log($"Health for entity with id {data.Id} changed by {data.ChangeAmount} to {data.Health}.");
-	}
+    private void LogHeatlhChanged(OnHealthChanged data)
+    {
+        Debug.Log($"Health for entity with id {data.Id} changed by {data.ChangeAmount} to {data.Health}.");
+    }
 
-	private void LogHeatlhChangedKeyed(OnHealthChanged data)
-	{
-		Debug.Log($"Health for entity with id {data.Id} changed by {data.ChangeAmount} to {data.Health}.");
-	}
+    private void LogHeatlhChangedKeyed(OnHealthChanged data)
+    {
+        Debug.Log($"Health for entity with id {data.Id} changed by {data.ChangeAmount} to {data.Health}.");
+    }
 }
 ```
 
