@@ -99,7 +99,7 @@ Once you have the Event System instance created and some event channel specified
 ```csharp
 public class Provider : MonoBehaviour
 {
-	private void Start()
+    private void Start()
     {
         var eventData = new OnHealthChanged(1, 10, -5);
         App.EventSystem.Raise(eventData);
