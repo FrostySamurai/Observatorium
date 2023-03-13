@@ -79,14 +79,14 @@ namespace Samurai.Observatorium.Runtime
 
         #region Keyed Events
 
-        public IDisposable Register<TKey, TData>(Action<TData> callback, TKey key) where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
+        public IDisposable Register<TKey, TData>(TKey key, Action<TData> callback) where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
         {
-            return GetChannel<TKey, TData>()?.Register(callback, key);
+            return GetChannel<TKey, TData>()?.Register(key, callback);
         }
 
-        public void Unregister<TKey, TData>(Action<TData> callback, TKey key) where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
+        public void Unregister<TKey, TData>(TKey key, Action<TData> callback) where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
         {
-            GetChannel<TKey, TData>()?.Unregister(callback, key);
+            GetChannel<TKey, TData>()?.Unregister(key, callback);
         }
 
         #endregion Keyed Events

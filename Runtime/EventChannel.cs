@@ -80,7 +80,7 @@ namespace Samurai.Observatorium.Runtime
     {
         private Dictionary<TKey, List<Action<TData>>> _mappedCallbacks = new();
 
-        public IDisposable Register(Action<TData> callback, TKey key)
+        public IDisposable Register(TKey key, Action<TData> callback)
         {
             var callbacks = GetCallbacks(key);
             if (callbacks.Contains(callback))
@@ -89,10 +89,10 @@ namespace Samurai.Observatorium.Runtime
             }
 
             callbacks.Add(callback);
-            return new CallbackDisposer(() => Unregister(callback, key));
+            return new CallbackDisposer(() => Unregister(key, callback));
         }
 
-        public void Unregister(Action<TData> callback, TKey key)
+        public void Unregister(TKey key, Action<TData> callback)
         {
             GetCallbacks(key).Remove(callback);
         }
