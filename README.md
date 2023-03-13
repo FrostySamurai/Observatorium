@@ -118,7 +118,7 @@ public class Observer : MonoBehaviour
     private void Awake()
     {
         _eventHandles.Add(App.EventSystem.Register<OnHealthChanged>(LogHeatlhChanged));
-        _eventHandles.Add(App.EventSystem.Register<int, OnHealthChanged>(LogHeatlhChangedKeyed, 1));
+        _eventHandles.Add(App.EventSystem.Register<int, OnHealthChanged>(1, LogHeatlhChangedKeyed));
     }
 
     private void OnDestroy()
