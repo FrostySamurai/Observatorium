@@ -135,3 +135,16 @@ public class Observer : MonoBehaviour
     }
 }
 ```
+
+## Debugging
+
+If execution of event callback fails an error log is printed. Log contains information about event data, callback and a stack trace. For more information about event data it is recommended to override data ToString function
+
+```csharp
+public override string ToString()
+{
+	return $"{Id} | {Health} | {ChangeAmount}";
+}
+```
+
+This doesn't cancel the execution of other callbacks.

@@ -2,6 +2,10 @@
 
 ## [0.0.2] - 2023-03-13
 
+### Added
+- Callbacks are now called within a try-catch. If a callback crashes other callbacks will still be executed.
+- More comprehensive logging for callback crashes.
+
 ### Fixed
 - Callbacks can't be registered multiple times anymore. This doesn't apply to lambda expression callbacks.
 

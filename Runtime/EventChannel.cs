@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.Pool;
 
 namespace Samurai.Observatorium.Runtime
@@ -53,7 +54,25 @@ namespace Samurai.Observatorium.Runtime
 
         public virtual void Raise(TData data)
         {
-            _callbacks.ForEach(x => x?.Invoke(data));
+            _callbacks.ForEach(x => Raise(ref x, ref data));
+        }
+
+        protected void Raise(ref Action<TData> callback, ref TData data)
+        {
+            try
+            {
+                callback?.Invoke(data);
+            }
+            catch (Exception e)
+            {
+                if (callback == null)
+                {
+                    Debug.LogError($"Raising an event failed! Callback is null..");
+                    return;
+                }
+                
+                Debug.LogError($"Raising an event failed! Data: {data} | Callback: {callback?.Target} - {callback?.Method}{Environment.NewLine}{e.Message}{Environment.NewLine}{e.StackTrace}");
+            }
         }
     }
 
@@ -103,9 +122,10 @@ namespace Samurai.Observatorium.Runtime
 
         public override void Raise(TData data)
         {
+            // TODO: try catch when raising
             if (data is IEventKeyProvider<TKey> keyedData)
             {
-                GetCallbacks(keyedData.EventKey).ForEach(x => x?.Invoke(data));
+                GetCallbacks(keyedData.EventKey).ForEach(x => Raise(ref x, ref data));
             }
             
             base.Raise(data);
