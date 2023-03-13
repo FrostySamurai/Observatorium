@@ -143,7 +143,7 @@ If execution of event callback fails an error log is printed. Log contains infor
 ```csharp
 public override string ToString()
 {
-	return $"{Id} | {Health} | {ChangeAmount}";
+    return $"{Id} | {Health} | {ChangeAmount}";
 }
 ```
 
