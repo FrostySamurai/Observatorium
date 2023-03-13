@@ -131,6 +131,7 @@ public class Observer : MonoBehaviour
 
     private void LogHeatlhChangedKeyed(OnHealthChanged data)
     {
+    	// This will only be called if data.Id == 1
         Debug.Log($"Health for entity with id {data.Id} changed by {data.ChangeAmount} to {data.Health}.");
     }
 }
