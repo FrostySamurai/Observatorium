@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/FrostySamurai/Observatorium)
+[![openupm](https://img.shields.io/npm/v/net.samurai.observatorium?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/net.samurai.observatorium/) ![GitHub](https://img.shields.io/github/license/FrostySamurai/Observatorium)
 
 # Observatorium
 
