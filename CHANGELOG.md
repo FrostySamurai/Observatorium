@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.3] - 2023-03-15
+
+### Fixed
+- Added assembly definition so that the package can be properly used
+
 ## [0.0.2] - 2023-03-13
 
 ### Added
