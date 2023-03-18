@@ -157,7 +157,7 @@ public class Observer : MonoBehaviour
 App.EventSystem.Unregister<OnHealthChanged>(LogHeatlhChanged);
 
 // valid, preferred for keyed callbacks
-App.EventSystem.Unregister<int, OnHealthChanged>(LogHealthChanged)
+App.EventSystem.Unregister<int, OnHealthChanged>(1, LogHealthChanged);
 
 // invalid, lambda functions need to be unregistered through IDisposable returned from Register function
 App.EventSystem.Unregister<OnHealthChanged>(x => Debug.Log($"Lambda callback for entity with id {x.Id}."));
