@@ -104,7 +104,12 @@ public class Provider : MonoBehaviour
     private void Start()
     {
         var eventData = new OnHealthChanged(1, 10, -5);
+
+        // will raise the event for all matching keyed callbacks and all global callbacks
         App.EventSystem.Raise(eventData);
+
+        // will only raise the event for matching keyed callbacks
+        App.EventSystem.Raise<int, OnHealthChanged>(eventData);
     }
 }
 ```

@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.1] - 2023-03-18
+
+### Added
+- It is now possible to raise an event only for callbacks with specified key.
+
 ## [0.0.3] - 2023-03-15
 
 ### Fixed

@@ -127,13 +127,16 @@ namespace Samurai.Observatorium.Runtime
 
         public override void Raise(TData data)
         {
-            // TODO: try catch when raising
+            RaiseKeyed(data);
+            base.Raise(data);
+        }
+
+        public void RaiseKeyed(TData data)
+        {
             if (data is IEventKeyProvider<TKey> keyedData)
             {
                 GetCallbacks(keyedData.EventKey).ForEach(x => Raise(ref x, ref data));
             }
-            
-            base.Raise(data);
         }
         
         private List<Action<TData>> GetCallbacks(TKey key)

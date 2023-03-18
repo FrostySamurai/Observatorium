@@ -75,6 +75,11 @@ namespace Samurai.Observatorium.Runtime
             GetChannel<TData>()?.Raise(data);
         }
 
+        public void Raise<TKey, TData>(TData data) where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
+        {
+            GetChannel<TKey, TData>()?.RaiseKeyed(data);
+        }
+
         #endregion General Events
 
         #region Keyed Events
