@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.2] - 2023-03-19
+
+### Fixed
+- Unregistering a callback from an event callback no longer causes crashes.
+
 ## [0.1.1] - 2023-03-18
 
 ### Added

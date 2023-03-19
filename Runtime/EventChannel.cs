@@ -54,7 +54,9 @@ namespace Samurai.Observatorium.Runtime
 
         public virtual void Raise(TData data)
         {
-            _callbacks.ForEach(x => Raise(ref x, ref data));
+            using var obj = ListPool<Action<TData>>.Get(out var temp);
+            temp.AddRange(_callbacks);
+            temp.ForEach(x => Raise(ref x, ref data));
         }
 
         protected void Raise(ref Action<TData> callback, ref TData data)
@@ -135,7 +137,9 @@ namespace Samurai.Observatorium.Runtime
         {
             if (data is IEventKeyProvider<TKey> keyedData)
             {
-                GetCallbacks(keyedData.EventKey).ForEach(x => Raise(ref x, ref data));
+                using var obj = ListPool<Action<TData>>.Get(out var temp);
+                temp.AddRange(GetCallbacks(keyedData.EventKey));
+                temp.ForEach(x => Raise(ref x, ref data));
             }
         }
         
