@@ -73,11 +73,19 @@ namespace Samurai.Observatorium.Runtime
         public void Raise<TData>(TData data)
         {
             GetChannel<TData>()?.Raise(data);
+            if (data is IDisposable disposable)
+            {
+                data.Dispose();
+            }
         }
 
         public void Raise<TKey, TData>(TData data) where TData : IEventKeyProvider<TKey> where TKey : IEquatable<TKey>
         {
             GetChannel<TKey, TData>()?.RaiseKeyed(data);
+            if (data is IDisposable disposable)
+            {
+                data.Dispose();
+            }
         }
 
         #endregion General Events

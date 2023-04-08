@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.1] - 2023-04-08
+
+### Added
+- Event data that implements IDisposable is now automatically disposed after event is raised
+
 ## [0.1.2] - 2023-03-19
 
 ### Fixed

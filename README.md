@@ -92,6 +92,34 @@ public struct OnHealthChanged : IEventKeyProvider<int>
 public class OnHealthChangedChannel : ScriptableEventChannel<int, OnHealthChanged> {}
 ```
 
+### Disposing
+
+If the event data implements IDisposable interface, the data will be automatically disposed of after the event is raised. This can be useful if the event uses pooled items.
+
+#### Example
+
+```csharp
+public struct OnItemsAdded : IEventKeyProvider<uint>, IDisposable
+{
+    public uint Id;
+    public List<Item> Items;
+
+    public uint EventKey => Id;
+
+    public OnItemsAdded(uint id, IEnumerable<Item> items)
+    {
+        Id = id;
+        Items = ListPool<Item>.Get();
+        Items.AddRange(items);
+    }
+
+    public void Dispose()
+    {
+        ListPool<Item>.Release(Items);
+    }
+}
+```
+
 ## Usage
 
 Once you have the Event System instance created and some event channel specified, you can register and raise your events. This example assumes one of the above keyed example channels was created and the Event System is a static instance in App class.
