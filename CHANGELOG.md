@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.2] - 2023-04-08
+
+### Fixed
+- Fixed issue with incorrect variable used to dispose event data
+
 ## [0.2.1] - 2023-04-08
 
 ### Added
